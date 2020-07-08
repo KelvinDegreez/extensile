@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import com.kelvindegrez.extensile.mvi.impl.MviViewFragment
 import com.kelvindegrez.extensiledebug.R
 import kotlinx.android.synthetic.main.debug_splash_layout.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SplashView : MviViewFragment<SplashModel.ViewState, SplashIntent.Action>() {
 
@@ -18,12 +20,18 @@ class SplashView : MviViewFragment<SplashModel.ViewState, SplashIntent.Action>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         debug_splash_button.setOnClickListener {
-            intent.intentChannel.send(SplashIntent.Action.Test)
+            GlobalScope.launch {
+                intent.intentChannel.send(SplashIntent.Action.Test)
+            }
         }
     }
 
     override fun render(viewState: SplashModel.ViewState) {
-
+        if(viewState.test){
+            debug_splash_constraintLayout.setBackgroundResource(R.color.colorAccent)
+        }else{
+            debug_splash_constraintLayout.setBackgroundResource(R.color.colorPrimary)
+        }
     }
 
 }

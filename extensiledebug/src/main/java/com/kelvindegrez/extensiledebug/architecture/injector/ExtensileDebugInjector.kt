@@ -1,9 +1,10 @@
 package com.kelvindegrez.extensiledebug.architecture.injector
 
 import android.app.Application
+import androidx.fragment.app.Fragment
 import com.kelvindegrez.extensile.architecture.analytics.Logger
+import com.kelvindegrez.extensile.architecture.coordinator.NavigationCoordinator
 import com.kelvindegrez.extensile.architecture.injector.Injector
-import com.kelvindegrez.extensile.mvi.android.MviFragmentViewActivity
 import com.kelvindegrez.extensiledebug.architecture.analytics.ExtensileDebugLogger
 import com.kelvindegrez.extensiledebug.architecture.coordinator.ExtensileDebugNavigationCoordinator
 import com.kelvindegrez.extensiledebug.architecture.database.ExtensileDebugDatabase
@@ -19,11 +20,6 @@ object ExtensileDebugInjector : Injector {
     private val contextReferenceLostException = Exception("Application context was set, however the reference has been lost")
     fun setApplicationContext(application: Application) {context = WeakReference(application)}
 
-    private var mviFragmentActivity: WeakReference<MviFragmentViewActivity>? = null
-    private val mviFragmentActivityNotSetException = Exception("MviFragment context has not been set. Please set context via setMviFragmentActivityContext(mviFragmentViewActivity: MviFragmentViewActivity)")
-    private val mviFragmentActivityReferenceLostException = Exception("MviFragment context was set, however the reference has been lost")
-    fun setMviFragmentActivityContext(mviFragmentViewActivity: MviFragmentViewActivity) {mviFragmentActivity = WeakReference(mviFragmentViewActivity)}
-
     private val database : ExtensileDebugDatabase by lazy { ExtensileDebugDatabase() }
     private val network : ExtensileDebugNetwork by lazy { ExtensileDebugNetwork() }
     private val logger : ExtensileDebugLogger by lazy {
@@ -33,19 +29,15 @@ object ExtensileDebugInjector : Injector {
             else -> ExtensileDebugLogger(context!!.get()!!)
         }
     }
-    private val coordinator : ExtensileDebugNavigationCoordinator by lazy {
-        when {
-            mviFragmentActivity == null -> throw mviFragmentActivityNotSetException
-            mviFragmentActivity!!.get() == null -> throw mviFragmentActivityReferenceLostException
-            else -> ExtensileDebugNavigationCoordinator(mviFragmentActivity!!.get()!!)
-        }
-    }
+    private val coordinator : NavigationCoordinator<Fragment> by lazy { ExtensileDebugNavigationCoordinator() }
 
     override fun provideDatabase(): ExtensileDebugDatabase = database
 
     override fun provideNetwork(): ExtensileDebugNetwork = network
 
-    override fun provideNavigationCoordinator(): ExtensileDebugNavigationCoordinator = coordinator
+    override fun provideNavigationCoordinator(): NavigationCoordinator<Fragment> = coordinator
 
     override fun provideLogger(): Logger = logger
+
 }
+

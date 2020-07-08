@@ -1,9 +1,10 @@
 package com.kelvindegrez.extensile.architecture.injector
 
+import androidx.fragment.app.Fragment
 import com.kelvindegrez.extensile.architecture.analytics.Logger
 import com.kelvindegrez.extensile.architecture.database.Database
 import com.kelvindegrez.extensile.architecture.network.Network
-import com.kelvindegrez.extensile.architecture.coordinator.Coordinator
+import com.kelvindegrez.extensile.architecture.coordinator.NavigationCoordinator
 
 interface Injector {
 
@@ -11,7 +12,7 @@ interface Injector {
 
     fun provideNetwork() : Network
 
-    fun provideNavigationCoordinator(): Coordinator.NavigationCoordinator
+    fun provideNavigationCoordinator(): NavigationCoordinator<Fragment>
 
     fun provideLogger(): Logger
 }

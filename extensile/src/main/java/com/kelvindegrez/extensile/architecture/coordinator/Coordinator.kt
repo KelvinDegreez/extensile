@@ -6,6 +6,4 @@ interface Coordinator {
 
     fun onBack() : Boolean
 
-    interface NavigationCoordinator : Coordinator
-
 }

@@ -1,14 +1,14 @@
-package com.kelvindegrez.extensile.mvi.android
+package com.kelvindegrez.extensile.architecture.coordinator
 
-import com.kelvindegrez.extensile.architecture.coordinator.Coordinator
+import com.kelvindegrez.extensile.architecture.ViewLoader
 import java.util.*
 
-abstract class MviFragmentNavigationCoordinator(
-    mviFragmentViewActivity: MviFragmentViewActivity
-) : MviFragmentCoordinator(mviFragmentViewActivity) {
+
+abstract class NavigationCoordinator<VIEW_TYPE> : Coordinator {
 
     abstract val launchCoordinator : Coordinator
     private val coordinatorStack : Stack<Coordinator> = Stack()
+    lateinit var viewLoader : ViewLoader<VIEW_TYPE>
 
     override fun start() {
         if(coordinatorStack.isEmpty()) coordinatorStack.push(launchCoordinator)
@@ -28,4 +28,11 @@ abstract class MviFragmentNavigationCoordinator(
             }
         }
     }
+
+    fun push(coordinator: Coordinator) {
+        coordinatorStack.push(coordinator)
+        coordinatorStack.peek().start()
+    }
+
 }
+

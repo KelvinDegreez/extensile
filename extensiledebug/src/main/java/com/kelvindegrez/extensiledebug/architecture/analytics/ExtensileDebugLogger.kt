@@ -1,28 +1,31 @@
 package com.kelvindegrez.extensiledebug.architecture.analytics
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.kelvindegrez.extensile.architecture.analytics.Logger
 
-class ExtensileDebugLogger(context: Context) : Logger {
+class ExtensileDebugLogger(private val context: Context) : Logger {
 
     override fun logWarning(tag: String, warning: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.w(tag, warning)
     }
 
     override fun logInfo(tag: String, info: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.i(tag, info)
     }
 
     override fun logDebug(tag: String, message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Log.d(tag, message)
     }
 
     override fun logError(tag: String, error: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.e(tag, Log.getStackTraceString(error))
     }
 
     override fun logError(tag: String, error: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.e(tag, error)
     }
 
 }

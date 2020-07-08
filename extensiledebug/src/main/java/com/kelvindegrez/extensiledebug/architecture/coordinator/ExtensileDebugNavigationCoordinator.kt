@@ -1,13 +1,14 @@
 package com.kelvindegrez.extensiledebug.architecture.coordinator
 
-import com.kelvindegrez.extensile.architecture.coordinator.Coordinator
-import com.kelvindegrez.extensile.mvi.android.MviFragmentNavigationCoordinator
-import com.kelvindegrez.extensile.mvi.android.MviFragmentViewActivity
+import androidx.fragment.app.Fragment
+import com.kelvindegrez.extensile.architecture.coordinator.NavigationCoordinator
 
-class ExtensileDebugNavigationCoordinator(
-    mviFragmentViewActivity: MviFragmentViewActivity
-) : MviFragmentNavigationCoordinator(mviFragmentViewActivity) {
+class ExtensileDebugNavigationCoordinator : NavigationCoordinator<Fragment>() {
 
-    override val launchCoordinator: Coordinator = SplashCoordinator(mviFragmentViewActivity)
+    override val launchCoordinator : StartCoordinator by lazy { StartCoordinator()}
+
+    fun showHome() {
+
+    }
 
 }

@@ -1,11 +1,11 @@
 package com.kelvindegrez.extensiledebug.screens.splash
 
 import com.kelvindegrez.extensile.mvi.MviIntent
-import com.kelvindegrez.extensile.mvi.SimpleHotObservable
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 
 class SplashIntent : MviIntent<SplashIntent.Action> {
 
-    override val intentChannel: SimpleHotObservable<Action> = SimpleHotObservable(Action.Test)
+    override val intentChannel= ConflatedBroadcastChannel<Action>(Action.Test)
 
     sealed class Action : MviIntent.Action {
         object Test : Action()

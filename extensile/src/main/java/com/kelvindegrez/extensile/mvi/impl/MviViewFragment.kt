@@ -4,6 +4,11 @@ import androidx.fragment.app.Fragment
 import com.kelvindegrez.extensile.mvi.MviIntent
 import com.kelvindegrez.extensile.mvi.MviModel
 import com.kelvindegrez.extensile.mvi.MviView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 abstract class MviViewFragment<ViewState : MviModel.ViewState, Action : MviIntent.Action> : Fragment(), MviView<ViewState> {
 
@@ -27,13 +32,22 @@ abstract class MviViewFragment<ViewState : MviModel.ViewState, Action : MviInten
     }
 
     private fun setActive() {
-        intent.intentChannel.subscribe { model.handleAction(it) }
-        model.viewStateChannel.subscribe { render(it) }
+        val intentChannel = intent.intentChannel.openSubscription()
+        val modelChannel = model.viewStateChannel.openSubscription()
+        GlobalScope.launch {
+            intentChannel.consumeEach {
+                model.handleAction(it)
+            }
+        }
+        GlobalScope.launch {
+            modelChannel.consumeEach {
+                render(it)
+            }
+        }
     }
 
     private fun setInactive() {
-        intent.intentChannel.dispose()
-        model.viewStateChannel.dispose()
-//        model.compositeDisposable.dispose()
+        intent.intentChannel.cancel()
+        model.viewStateChannel.cancel()
     }
 }

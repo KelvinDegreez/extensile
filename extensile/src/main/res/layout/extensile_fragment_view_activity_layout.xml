@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".mvi.android.MviFragmentViewActivity">
+        tools:context=".mvi.android.ExtensileFragmentActivity">
 
     <FrameLayout
         android:id="@+id/mvi_fragment_view_activity_container"
@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:background="#4CAF50">
+        android:background="@color/colorPrimary">
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

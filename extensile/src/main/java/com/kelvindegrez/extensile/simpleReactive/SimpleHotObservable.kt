@@ -1,4 +1,4 @@
-package com.kelvindegrez.extensile.mvi
+package com.kelvindegrez.extensile.simpleReactive
 
 class SimpleHotObservable<T>(initialValue : T) {
 
@@ -7,6 +7,11 @@ class SimpleHotObservable<T>(initialValue : T) {
 
     fun subscribe(subscription : (T) -> Unit) {
         subscriptions.add(subscription)
+    }
+
+    fun subscribeWithValue(subscription : (T) -> Unit) {
+        subscriptions.add(subscription)
+        subscription.invoke(lastValue)
     }
 
     fun send(value: T) {
