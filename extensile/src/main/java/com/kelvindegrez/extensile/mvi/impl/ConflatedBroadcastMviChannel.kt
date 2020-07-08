@@ -2,6 +2,7 @@ package com.kelvindegrez.extensile.mvi.impl
 
 import com.kelvindegrez.extensile.mvi.MviChannel
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
@@ -11,15 +12,17 @@ class ConflatedBroadcastMviChannel<E>(initialElement: E) : MviChannel<E> {
     private val channel = ConflatedBroadcastChannel(initialElement)
     
     override fun send(element: E) {
-        GlobalScope.launch {
-            channel.send(element)
-            value = element
+        if(!channel.isClosedForSend) {
+            GlobalScope.launch {
+                channel.send(element)
+                value = element
+            }
         }
     }
 
     override fun observe(observer: (E) -> Unit) {
         val subscription = channel.openSubscription()
-        GlobalScope.launch {
+        MainScope().launch {
             subscription.consumeEach {
                 observer.invoke(it)
             }
