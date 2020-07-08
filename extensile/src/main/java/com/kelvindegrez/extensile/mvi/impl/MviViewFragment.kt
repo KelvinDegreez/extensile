@@ -32,22 +32,16 @@ abstract class MviViewFragment<ViewState : MviModel.ViewState, Action : MviInten
     }
 
     private fun setActive() {
-        val intentChannel = intent.intentChannel.openSubscription()
-        val modelChannel = model.viewStateChannel.openSubscription()
-        GlobalScope.launch {
-            intentChannel.consumeEach {
-                model.handleAction(it)
-            }
+        intent.intentChannel.observe {
+            model.handleAction(it)
         }
-        GlobalScope.launch {
-            modelChannel.consumeEach {
-                render(it)
-            }
+        model.viewStateChannel.observe {
+            render(it)
         }
     }
 
     private fun setInactive() {
-        intent.intentChannel.cancel()
-        model.viewStateChannel.cancel()
+        intent.intentChannel.close()
+        model.viewStateChannel.close()
     }
 }

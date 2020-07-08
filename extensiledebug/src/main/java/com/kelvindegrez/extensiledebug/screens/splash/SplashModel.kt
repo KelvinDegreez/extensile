@@ -2,24 +2,16 @@ package com.kelvindegrez.extensiledebug.screens.splash
 
 import com.kelvindegrez.extensile.mvi.MviModel
 import com.kelvindegrez.extensile.mvi.android.AndroidMviModel
-import com.kelvindegrez.extensile.simpleReactive.SimpleHotObservable
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.launch
-
+import com.kelvindegrez.extensile.mvi.impl.ConflatedBroadcastMviChannel
 
 class SplashModel : AndroidMviModel<SplashModel.ViewState, SplashIntent.Action> {
 
-    override val viewStateChannel = ConflatedBroadcastChannel(ViewState(false))
+    override val viewStateChannel = ConflatedBroadcastMviChannel(ViewState(false))
 
     override fun handleAction(action: SplashIntent.Action) {
         when(action){
             SplashIntent.Action.Test -> {
-                GlobalScope.launch {
-                    viewStateChannel.send(viewStateChannel.value.copy(test = !viewStateChannel.value.test))
-                }
-
+                viewStateChannel.send(viewStateChannel.value.copy(test = !viewStateChannel.value.test))
             }
         }
     }
